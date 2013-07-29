@@ -7,10 +7,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gdata.client.spreadsheet.CellQuery;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.data.dublincore.Date;
 import com.google.gdata.data.extensions.City;
 import com.google.gdata.data.spreadsheet.CellEntry;
+import com.google.gdata.data.spreadsheet.CellFeed;
 import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 
@@ -39,6 +41,37 @@ public class WorksheetSpendingDataWrangler {
 	}
 
 	public List<SSFinanceDataEntry> getWorksheetSpendingData(WorksheetEntry worksheet) throws IOException, ServiceException {
+		URL cellFeedUrl = worksheet.getCellFeedUrl();
+		//CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
+		int rowCount = worksheet.getRowCount();
+		
+		List<SSFinanceDataEntry> entries = new ArrayList<SSFinanceDataEntry>();
+		for (int idx=3; idx<=rowCount; idx++) {
+			CellQuery query = new CellQuery(cellFeedUrl);
+			query.setMinimumRow(idx);
+			query.setMaximumRow(idx);
+			query.setMinimumCol(COLUMN_DATE);
+			query.setMaximumCol(COLUMN_PAYMENTMETHOD);
+			CellFeed feed = service.query(query, CellFeed.class);
+			
+			List<CellEntry> cells = feed.getEntries();
+			Double debit = cells.get(COLUMN_DEBIT-2).getCell().getDoubleValue();
+			Date date = new Date(cells.get(COLUMN_DATE-2).getCell().getValue());
+			String place = cells.get(COLUMN_PLACE-2).getCell().getValue();
+			String category = cells.get(COLUMN_CATEGORY-2).getCell().getValue();
+			City city = new City(cells.get(COLUMN_CITY-2).getCell().getValue());
+			String comment = cells.get(COLUMN_COMMENT-2).getCell().getValue();
+			String individual = cells.get(COLUMN_INDIVIDUAL-2).getCell().getValue();
+			String paymentMethod = cells.get(COLUMN_PAYMENTMETHOD-2).getCell().getValue();
+			
+			SSFinanceDataEntry entry = new SSFinanceDataEntry(date, place, category, city, debit, comment, individual, paymentMethod);
+			entries.add(entry);
+		}
+		
+		return entries;
+	}
+	
+	public List<SSFinanceDataEntry> getWorksheetSpendingDataSlow(WorksheetEntry worksheet) throws IOException, ServiceException {
 		URL cellFeedUrl = worksheet.getCellFeedUrl();
 		//CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
 		int rowCount = worksheet.getRowCount();
