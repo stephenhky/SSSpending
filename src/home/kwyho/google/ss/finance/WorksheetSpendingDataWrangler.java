@@ -172,6 +172,10 @@ public class WorksheetSpendingDataWrangler {
 		return classTypes;
 	}
 	
+	public List<ClassObj> getCategorizedSpendings(List<SSFinanceDataEntry> entries) {
+		return getClassifiedSpendings(entries, COLUMN_CATEGORY);
+	}
+	
 	@Deprecated
 	public List<SSFinanceDataEntry> getWorksheetSpendingDataSlow(WorksheetEntry worksheet) throws IOException, ServiceException {
 		URL cellFeedUrl = worksheet.getCellFeedUrl();
