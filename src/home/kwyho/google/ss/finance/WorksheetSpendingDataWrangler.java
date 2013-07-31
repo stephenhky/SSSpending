@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.gdata.client.spreadsheet.CellQuery;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
+import com.google.gdata.data.DateTime;
 import com.google.gdata.data.dublincore.Date;
 import com.google.gdata.data.extensions.City;
 import com.google.gdata.data.spreadsheet.CellEntry;
@@ -18,14 +19,14 @@ import com.google.gdata.util.ServiceException;
 
 public class WorksheetSpendingDataWrangler {
 	private SpreadsheetService service;
-	private static int COLUMN_DATE = 2;
-	private static int COLUMN_PLACE = 3;
-	private static int COLUMN_CATEGORY = 4;
-	private static int COLUMN_CITY = 5;
-	private static int COLUMN_DEBIT = 6;
-	private static int COLUMN_COMMENT = 7;
-	private static int COLUMN_INDIVIDUAL = 8;
-	private static int COLUMN_PAYMENTMETHOD = 9;
+	private final static int COLUMN_DATE = 2;
+	private final static int COLUMN_PLACE = 3;
+	private final static int COLUMN_CATEGORY = 4;
+	private final static int COLUMN_CITY = 5;
+	private final static int COLUMN_DEBIT = 6;
+	private final static int COLUMN_COMMENT = 7;
+	private final static int COLUMN_INDIVIDUAL = 8;
+	private final static int COLUMN_PAYMENTMETHOD = 9;
 
 	public SpreadsheetService getService() {
 		return service;
@@ -54,18 +55,56 @@ public class WorksheetSpendingDataWrangler {
 			query.setMaximumCol(COLUMN_PAYMENTMETHOD);
 			CellFeed feed = service.query(query, CellFeed.class);
 			
-			List<CellEntry> cells = feed.getEntries();
-			Double debit = cells.get(COLUMN_DEBIT-2).getCell().getDoubleValue();
-			Date date = new Date(cells.get(COLUMN_DATE-2).getCell().getValue());
-			String place = cells.get(COLUMN_PLACE-2).getCell().getValue();
-			String category = cells.get(COLUMN_CATEGORY-2).getCell().getValue();
-			City city = new City(cells.get(COLUMN_CITY-2).getCell().getValue());
-			String comment = cells.get(COLUMN_COMMENT-2).getCell().getValue();
-			String individual = cells.get(COLUMN_INDIVIDUAL-2).getCell().getValue();
-			String paymentMethod = cells.get(COLUMN_PAYMENTMETHOD-2).getCell().getValue();
+			Double debit = 0.0;
+			Date date = new Date(DateTime.now().toString());
+			String place = "";
+			String category = "";
+			City city = new City("Germantown, MD");
+			String comment = "";
+			String individual = "Stephen";
+			String paymentMethod = "Cash";
+			boolean nullEntry = true;
 			
-			SSFinanceDataEntry entry = new SSFinanceDataEntry(date, place, category, city, debit, comment, individual, paymentMethod);
-			entries.add(entry);
+			List<CellEntry> cells = feed.getEntries();
+			for (CellEntry cell: cells) {
+				switch(cell.getCell().getCol()) {
+				case COLUMN_DATE:
+					date = new Date(cell.getCell().getValue());
+					break;
+				case COLUMN_PLACE:
+					place = cell.getCell().getValue();
+					break;
+				case COLUMN_CATEGORY:
+					category = cell.getCell().getValue();
+					break;
+				case COLUMN_CITY:
+					city = new City(cell.getCell().getValue());
+					break;
+				case COLUMN_COMMENT:
+					comment = cell.getCell().getValue();
+					break;
+				case COLUMN_DEBIT:
+					Double tempVal = cell.getCell().getDoubleValue();
+					if (!tempVal.equals(Double.NaN)) {
+						debit = tempVal;
+						nullEntry = false;
+					}
+					break;
+				case COLUMN_INDIVIDUAL:
+					individual = cell.getCell().getValue();
+					break;
+				case COLUMN_PAYMENTMETHOD:
+					paymentMethod = cell.getCell().getValue();
+					break;
+				default:
+					System.out.println("Out of range: R"+cell.getCell().getRow()+"C"+cell.getCell().getCol());
+				}
+			}
+			
+			if (!nullEntry) {
+				SSFinanceDataEntry entry = new SSFinanceDataEntry(date, place, category, city, debit, comment, individual, paymentMethod);
+				entries.add(entry);	
+			}
 		}
 		
 		return entries;
