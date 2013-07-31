@@ -1,6 +1,7 @@
 package home.kwyho.google.ss.finance;
 
 import home.kwyho.google.ss.finance.authenticate.GoogleSpreadsheetAuthentication;
+import home.kwyho.google.ss.finance.dataobj.ClassObj;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
 
 import java.io.IOException;
@@ -110,8 +111,9 @@ public class SpreadsheetSSSpending {
 			if (worksheet != null) {
 				System.out.println(month+" : "+worksheet.getTitle().getPlainText());
 				List<SSFinanceDataEntry> entries = worksheetWrangler.getWorksheetSpendingData(worksheet);
-				for (SSFinanceDataEntry entry: entries) {
-					System.out.println(entry);
+				List<ClassObj> classTypes = worksheetWrangler.getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_INDIVIDUAL);
+				for (ClassObj classType: classTypes) {
+					System.out.println(classType);
 				}
 			}
 		}

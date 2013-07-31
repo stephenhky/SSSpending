@@ -1,10 +1,12 @@
 package home.kwyho.google.ss.finance;
 
+import home.kwyho.google.ss.finance.dataobj.ClassObj;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.gdata.client.spreadsheet.CellQuery;
@@ -19,14 +21,14 @@ import com.google.gdata.util.ServiceException;
 
 public class WorksheetSpendingDataWrangler {
 	private SpreadsheetService service;
-	private final static int COLUMN_DATE = 2;
-	private final static int COLUMN_PLACE = 3;
-	private final static int COLUMN_CATEGORY = 4;
-	private final static int COLUMN_CITY = 5;
-	private final static int COLUMN_DEBIT = 6;
-	private final static int COLUMN_COMMENT = 7;
-	private final static int COLUMN_INDIVIDUAL = 8;
-	private final static int COLUMN_PAYMENTMETHOD = 9;
+	public final static int COLUMN_DATE = 2;
+	public final static int COLUMN_PLACE = 3;
+	public final static int COLUMN_CATEGORY = 4;
+	public final static int COLUMN_CITY = 5;
+	public final static int COLUMN_DEBIT = 6;
+	public final static int COLUMN_COMMENT = 7;
+	public final static int COLUMN_INDIVIDUAL = 8;
+	public final static int COLUMN_PAYMENTMETHOD = 9;
 
 	public SpreadsheetService getService() {
 		return service;
@@ -110,6 +112,67 @@ public class WorksheetSpendingDataWrangler {
 		return entries;
 	}
 	
+	private HashMap<String, ClassObj> initializeClassTypes(List<SSFinanceDataEntry> entries, int column) {
+		HashMap<String, ClassObj> classTypeHash = new HashMap<String, ClassObj>();
+		
+		for (SSFinanceDataEntry entry: entries) {
+			String entryName = null;
+			switch(column) {
+			case COLUMN_PLACE:
+				entryName = entry.getPlace();
+				break;
+			case COLUMN_CATEGORY:
+				entryName = entry.getCategory();
+				break;
+			case COLUMN_INDIVIDUAL:
+				entryName = entry.getIndividual();
+				break;
+			case COLUMN_PAYMENTMETHOD:
+				entryName = entry.getPaymentMethod();
+				break;
+			default:
+				return null;
+			}
+			if (!classTypeHash.containsKey(entryName)) {
+				ClassObj obj = new ClassObj(entryName, 0.0);
+				classTypeHash.put(entryName, obj);
+			}
+		}
+		
+		return classTypeHash;
+	}
+	
+	public List<ClassObj> getClassifiedSpendings(List<SSFinanceDataEntry> entries, int column) {
+		HashMap<String, ClassObj> classTypeHash = initializeClassTypes(entries, column);
+		
+		for (SSFinanceDataEntry entry: entries) {
+			String entryName = null;
+			switch(column) {
+			case COLUMN_PLACE:
+				entryName = entry.getPlace();
+				break;
+			case COLUMN_CATEGORY:
+				entryName = entry.getCategory();
+				break;
+			case COLUMN_INDIVIDUAL:
+				entryName = entry.getIndividual();
+				break;
+			case COLUMN_PAYMENTMETHOD:
+				entryName = entry.getPaymentMethod();
+				break;
+			default:
+				return null;
+			}
+			Double total = classTypeHash.get(entryName).getTotalAmount() + entry.getDebit();
+			classTypeHash.get(entryName).setTotalAmount(total);
+		}
+		
+		List<ClassObj> classTypes = new ArrayList<ClassObj>(classTypeHash.values());
+		
+		return classTypes;
+	}
+	
+	@Deprecated
 	public List<SSFinanceDataEntry> getWorksheetSpendingDataSlow(WorksheetEntry worksheet) throws IOException, ServiceException {
 		URL cellFeedUrl = worksheet.getCellFeedUrl();
 		//CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
