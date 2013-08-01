@@ -113,6 +113,7 @@ public class CategoryNormalizer {
 					scores.set(i, scores.get(i)+1);
 				}
 			}
+			// Get the maximum score
 			int maxScore = Integer.MIN_VALUE;
 			int maxScorePos = -1;
 			for (int i=0; i<words.size(); i++) {
