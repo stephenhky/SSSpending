@@ -20,7 +20,7 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 
 public class WorksheetSpendingDataWrangler {
-	private SpreadsheetService service;
+	protected SpreadsheetService service;
 	public final static int COLUMN_DATE = 2;
 	public final static int COLUMN_PLACE = 3;
 	public final static int COLUMN_CATEGORY = 4;

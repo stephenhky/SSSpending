@@ -104,14 +104,15 @@ public class SpreadsheetSSSpending {
 		SpreadsheetEntry spreadsheet = ssSpend.retrieveSSSpendingSpreadsheet();
 		System.out.println(spreadsheet.getTitle().getPlainText());
 		
-		WorksheetSpendingDataWrangler worksheetWrangler = new WorksheetSpendingDataWrangler(ssSpend.service);
-				
+		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.service);
+		worksheetWrangler.importAllCategoriesFromData(username, password);
+		
 		for (String month: MONTH_NAMES) {
 			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
 			if (worksheet != null) {
 				System.out.println(month+" : "+worksheet.getTitle().getPlainText());
 				List<SSFinanceDataEntry> entries = worksheetWrangler.getWorksheetSpendingData(worksheet);
-				List<ClassObj> classTypes = worksheetWrangler.getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_INDIVIDUAL);
+				List<ClassObj> classTypes = worksheetWrangler.getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_CATEGORY);
 				for (ClassObj classType: classTypes) {
 					System.out.println(classType);
 				}
