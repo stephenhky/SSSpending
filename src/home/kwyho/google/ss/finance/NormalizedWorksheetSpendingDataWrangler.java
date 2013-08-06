@@ -48,7 +48,6 @@ public class NormalizedWorksheetSpendingDataWrangler extends
 			for (String month: SpreadsheetSSSpending.MONTH_NAMES) {
 				WorksheetEntry worksheet = ssSpend.getWorksheet(month);
 				if (worksheet != null) {
-					System.out.println(month+" : "+worksheet.getTitle().getPlainText());
 					List<SSFinanceDataEntry> entries = super.getWorksheetSpendingData(worksheet);
 					List<ClassObj> classTypes = super.getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_CATEGORY);
 					for (ClassObj categoryType: classTypes) {
