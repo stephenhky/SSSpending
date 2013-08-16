@@ -1,5 +1,10 @@
-package home.kwyho.google.ss.finance;
+package home.kwyho.google.ss.finance.console;
 
+import home.kwyho.google.ss.finance.FastNormalizedWorksheetSpendingDataWrangler;
+import home.kwyho.google.ss.finance.NormalizedWorksheetSpendingDataWrangler;
+import home.kwyho.google.ss.finance.SpendingAnalyzer;
+import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
+import home.kwyho.google.ss.finance.WorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.dataobj.ClassObj;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
 
@@ -14,7 +19,7 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
 
-public class SSGoogleSpend {
+public class SSGoogleSpendAll {
 
 	/**
 	 * @param args

@@ -26,7 +26,7 @@ public class CategoryNormalizer {
 	}
 	
 	public CategoryNormalizer() throws IOException, ClassNotFoundException {
-		this("SSSpendCatCrosswalk.csv");
+		this("JSSSpendCatCrosswalk.csv");
 	}
 	
 	public static String stemWords(String word) {
