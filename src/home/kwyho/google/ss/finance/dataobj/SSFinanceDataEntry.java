@@ -105,4 +105,8 @@ public class SSFinanceDataEntry {
 		return "SSFinanceDataEntry [date=" + date + ", place=" + place
 				+ ", category=" + category + ", debit=" + debit + "]";
 	}
+	
+	public boolean isEmpty() {
+		return (debit==null);
+	}
 }

@@ -22,7 +22,7 @@ import com.google.gdata.util.ServiceException;
 
 public class NormalizedWorksheetSpendingDataWrangler extends
 		WorksheetSpendingDataWrangler {
-	private CategoryNormalizer normalizer;
+	protected CategoryNormalizer normalizer;
 
 	public NormalizedWorksheetSpendingDataWrangler(SpreadsheetService service) {
 		super(service);

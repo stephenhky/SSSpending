@@ -104,7 +104,7 @@ public class SpreadsheetSSSpending {
 		SpreadsheetEntry spreadsheet = ssSpend.retrieveSSSpendingSpreadsheet();
 		System.out.println(spreadsheet.getTitle().getPlainText());
 		
-		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.service);
+		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new FastNormalizedWorksheetSpendingDataWrangler(ssSpend.service);
 		worksheetWrangler.importAllCategoriesFromData(username, password);
 		
 		for (String month: MONTH_NAMES) {
