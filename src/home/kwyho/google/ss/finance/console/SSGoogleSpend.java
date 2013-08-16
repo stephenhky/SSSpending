@@ -7,6 +7,7 @@ import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
 import home.kwyho.google.ss.finance.WorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.dataobj.ClassObj;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
+import home.kwyho.google.ss.finance.misc.DoubleRounder;
 
 import java.io.Console;
 import java.io.IOException;
@@ -47,11 +48,10 @@ public class SSGoogleSpend {
 		for (String month: args) {
 			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
 			if (worksheet != null) {
-				System.out.println(month+" : "+worksheet.getTitle().getPlainText());
 				List<SSFinanceDataEntry> entries = worksheetWrangler.getWorksheetSpendingData(worksheet);
 				List<ClassObj> classTypes = SpendingAnalyzer.getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_CATEGORY);
 				for (ClassObj classType: classTypes) {
-					System.out.println(classType);
+					System.out.println(classType.getClassType()+" : "+DoubleRounder.round(classType.getTotalAmount(), 2));
 				}
 			}
 		}
