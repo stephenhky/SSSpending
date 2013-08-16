@@ -1,16 +1,11 @@
 package home.kwyho.google.ss.finance;
 
 import home.kwyho.google.ss.finance.authenticate.GoogleSpreadsheetAuthentication;
-import home.kwyho.google.ss.finance.dataobj.ClassObj;
-import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
 
 import com.google.gdata.client.spreadsheet.FeedURLFactory;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
@@ -52,7 +47,11 @@ public class SpreadsheetSSSpending {
 		this(GoogleSpreadsheetAuthentication.login(username, password));
 	}
 	
-	private SpreadsheetEntry retrieveSSSpendingSpreadsheet() {
+	public SpreadsheetService getService() {
+		return service;
+	}
+
+	public SpreadsheetEntry retrieveSSSpendingSpreadsheet() {
 		List<SpreadsheetEntry> spreadsheets = spreadsheetFeed.getEntries();
 		for (SpreadsheetEntry spreadsheet: spreadsheets) {
 			if (spreadsheet.getId().indexOf(SS_SPEND_ID) != -1) {
@@ -88,35 +87,5 @@ public class SpreadsheetSSSpending {
 	
 	public WorksheetEntry getWorksheet(String month) {
 		return hashWorksheets.get(month);
-	}
-
-	public static void main(String[] args) throws AuthenticationException, IOException, ServiceException {
-		String username = JOptionPane.showInputDialog("username = ?");
-		String password = "";
-		JPasswordField pf = new JPasswordField();
-		int okCxl = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-		if (okCxl == JOptionPane.OK_OPTION) {
-		  password = new String(pf.getPassword());
-		} else {
-			System.exit(1);
-		}
-		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password);
-		SpreadsheetEntry spreadsheet = ssSpend.retrieveSSSpendingSpreadsheet();
-		System.out.println(spreadsheet.getTitle().getPlainText());
-		
-		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new FastNormalizedWorksheetSpendingDataWrangler(ssSpend.service);
-		worksheetWrangler.importAllCategoriesFromData(username, password);
-		
-		for (String month: MONTH_NAMES) {
-			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
-			if (worksheet != null) {
-				System.out.println(month+" : "+worksheet.getTitle().getPlainText());
-				List<SSFinanceDataEntry> entries = worksheetWrangler.getWorksheetSpendingData(worksheet);
-				List<ClassObj> classTypes = worksheetWrangler.getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_CATEGORY);
-				for (ClassObj classType: classTypes) {
-					System.out.println(classType);
-				}
-			}
-		}
 	}
 }
