@@ -62,7 +62,8 @@ public class CategoryNormalizer {
 		stemmedCategoriesHash = new HashMap<String, List<String>>();
 		
 		for (String category: categories) {
-			String stemmedCategory = CategoryNormalizer.stemWords(category);
+			String stemmedCategory = CategoryNormalizer.stemWords(category.toLowerCase());
+			//System.out.println(category+" -> "+stemmedCategory);
 			if (stemmedCategoriesHash.containsKey(stemmedCategory)) {
 				stemmedCategoriesHash.get(stemmedCategory).add(category);
 			} else {
@@ -127,7 +128,7 @@ public class CategoryNormalizer {
 	}
 	
 	public String normalize(String category) {
-		String stemmedCategory = CategoryNormalizer.stemWords(category);
+		String stemmedCategory = CategoryNormalizer.stemWords(category.toLowerCase());
 		if (stemmedCategoriesHash.containsKey(stemmedCategory)) {
 			return chooseBestWord(stemmedCategoriesHash.get(stemmedCategory));
 		} else {
