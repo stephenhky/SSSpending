@@ -1,18 +1,17 @@
 package home.kwyho.google.ss.finance.console;
 
-import home.kwyho.google.ss.finance.FastNormalizedWorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.NormalizedWorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.SpendingAnalyzer;
 import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
 import home.kwyho.google.ss.finance.WorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.dataobj.ClassObj;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
+import home.kwyho.google.ss.finance.gui.JAuthenticationPanel;
 
 import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
 
 import com.google.gdata.data.spreadsheet.SpreadsheetEntry;
 import com.google.gdata.data.spreadsheet.WorksheetEntry;
@@ -28,20 +27,18 @@ public class SSGoogleSpendAll {
 	 * @throws AuthenticationException 
 	 */
 	public static void main(String[] args) throws AuthenticationException, IOException, ServiceException {
-		String username = JOptionPane.showInputDialog("username = ?");
-		String password = "";
-		JPasswordField pf = new JPasswordField();
-		int okCxl = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-		if (okCxl == JOptionPane.OK_OPTION) {
-		  password = new String(pf.getPassword());
-		} else {
+		JAuthenticationPanel panel = new JAuthenticationPanel();
+		int option = JOptionPane.showConfirmDialog(null, panel, "Authentication", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (!(option == JOptionPane.OK_OPTION)) {
 			System.exit(1);
 		}
+		String username = panel.getGmailAddr();
+		String password = panel.getPassword();
 		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password);
 		SpreadsheetEntry spreadsheet = ssSpend.retrieveSSSpendingSpreadsheet();
 		System.out.println(spreadsheet.getTitle().getPlainText());
 		
-		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new FastNormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
+		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
 		worksheetWrangler.importAllCategoriesFromData(username, password);
 		
 		for (String month: SpreadsheetSSSpending.MONTH_NAMES) {
