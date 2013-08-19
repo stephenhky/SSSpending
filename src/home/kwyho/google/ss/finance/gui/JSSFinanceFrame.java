@@ -1,10 +1,18 @@
 package home.kwyho.google.ss.finance.gui;
+import home.kwyho.google.ss.finance.SpendingAnalyzer;
+import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
+import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JButton;
 
 import javax.swing.JCheckBox;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -30,6 +38,8 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 	private static final long serialVersionUID = 6019983120178259453L;
 	private JCheckBox jJanCheckBox;
 	private JCheckBox jFebCheckBox;
+	private JScrollPane jScrollPane1;
+	private JButton jAnalyzeButton;
 	private JTable jCategoryTable;
 	private JTabbedPane jTabbedPane;
 	private JCheckBox jMarCheckBox;
@@ -44,6 +54,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 	private JCheckBox jAprCheckBox;
 	private List<JCheckBox> monthCheckBoxes;
 	private CategorizedSpendingTableModel jCategoryTableModel;
+	private List<List<SSFinanceDataEntry>> monthEntries;
 
 	/**
 	* Auto-generated main method to display this JFrame
@@ -61,6 +72,27 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 	public JSSFinanceFrame() {
 		super();
 		initGUI();
+		monthEntries = new ArrayList<List<SSFinanceDataEntry>>();
+		for (int monthIdx=0; monthIdx<SpreadsheetSSSpending.MONTH_NAMES.length; monthIdx++) {
+			monthEntries.add(null);
+		}
+	}
+	
+	public void setEntries(int monthIdx, List<SSFinanceDataEntry> entries) {
+		monthEntries.set(monthIdx, entries);
+	}
+	
+	public void setAnalyzedMonthData() {
+		List<SSFinanceDataEntry> includedEntries = new ArrayList<SSFinanceDataEntry>();
+		for (int monthIdx=0; monthIdx<SpreadsheetSSSpending.MONTH_NAMES.length; monthIdx++) {
+			if (monthCheckBoxes.get(monthIdx).isSelected()) {
+				List<SSFinanceDataEntry> entries = monthEntries.get(monthIdx);
+				if (entries!=null) {
+					includedEntries.addAll(entries);
+				}
+			}
+		}
+		jCategoryTableModel.importCategorizedSpendingList(SpendingAnalyzer.getCategorizedSpendings(includedEntries));
 	}
 	
 	private void initGUI() {
@@ -155,13 +187,31 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 			{
 				jTabbedPane = new JTabbedPane();
 				getContentPane().add(jTabbedPane);
-				jTabbedPane.setBounds(29, 30, 336, 262);
+				jTabbedPane.setBounds(12, 12, 360, 287);
 				{
-					jCategoryTableModel = new CategorizedSpendingTableModel();
-					jCategoryTable = new JTable();
-					jTabbedPane.addTab("Spending by Categories", null, jCategoryTable, null);
-					jCategoryTable.setModel(jCategoryTableModel);
+					jScrollPane1 = new JScrollPane();
+					jTabbedPane.addTab("Categorized Spendings", null, jScrollPane1, null);
+					jScrollPane1.setPreferredSize(new java.awt.Dimension(355, 233));
+					{
+						jCategoryTableModel = new CategorizedSpendingTableModel();
+						jCategoryTable = new JTable();
+						jScrollPane1.setViewportView(jCategoryTable);
+						jCategoryTable.setModel(jCategoryTableModel);
+					}
 				}
+			}
+			{
+				jAnalyzeButton = new JButton();
+				getContentPane().add(jAnalyzeButton);
+				jAnalyzeButton.setText("Analyze");
+				jAnalyzeButton.setBounds(418, 8, 89, 22);
+				jAnalyzeButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						System.out.println("jAnalyzeButton.actionPerformed, event="+evt);
+						setAnalyzedMonthData();
+						jCategoryTable.updateUI();
+					}
+				});
 			}
 
 			// check the current month
@@ -169,7 +219,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 			int monthIdx = cal.get(Calendar.MONTH);
-			monthCheckBoxes.get(monthIdx-1).setSelected(true);
+			monthCheckBoxes.get(monthIdx).setSelected(true);
 			
 			pack();
 			this.setSize(521, 333);
