@@ -71,4 +71,12 @@ public class SpendingAnalyzer {
 	public static List<ClassObj> getCategorizedSpendings(List<SSFinanceDataEntry> entries) {
 		return getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_CATEGORY);
 	}
+	
+	public static Double getTotalSpending(List<SSFinanceDataEntry> entries) {
+		double total = 0.0;
+		for (SSFinanceDataEntry entry: entries) {
+			total += entry.getDebit();
+		}
+		return total;
+	}
 }

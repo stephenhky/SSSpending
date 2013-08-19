@@ -5,6 +5,7 @@ import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +13,8 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -38,6 +41,8 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 	private static final long serialVersionUID = 6019983120178259453L;
 	private JCheckBox jJanCheckBox;
 	private JCheckBox jFebCheckBox;
+	private JFormattedTextField jTotalAmountField;
+	private JLabel jLabel1;
 	private JScrollPane jScrollPane1;
 	private JButton jAnalyzeButton;
 	private JTable jCategoryTable;
@@ -95,6 +100,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 			}
 		}
 		jCategoryTableModel.importCategorizedSpendingList(SpendingAnalyzer.getCategorizedSpendings(includedEntries));
+		jTotalAmountField.setValue(SpendingAnalyzer.getTotalSpending(includedEntries));
 	}
 	
 	private void initGUI() {
@@ -176,7 +182,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 				jNovCheckBox = new JCheckBox();
 				getContentPane().add(jNovCheckBox);
 				jNovCheckBox.setText("November");
-				jNovCheckBox.setBounds(388, 251, 78, 19);
+				jNovCheckBox.setBounds(388, 251, 112, 19);
 				monthCheckBoxes.add(jNovCheckBox);
 			}
 			{
@@ -216,6 +222,19 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 					}
 				});
 			}
+			{
+				jLabel1 = new JLabel();
+				getContentPane().add(jLabel1);
+				jLabel1.setText("Total Spending");
+				jLabel1.setBounds(12, 314, 132, 15);
+			}
+			{
+				jTotalAmountField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
+				getContentPane().add(jTotalAmountField);
+				jTotalAmountField.setText("$0.00");
+				jTotalAmountField.setBounds(156, 311, 159, 22);
+				jTotalAmountField.setEditable(false);
+			}
 
 			// check the current month
 			Date date = new Date();
@@ -225,7 +244,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 			monthCheckBoxes.get(monthIdx).setSelected(true);
 			
 			pack();
-			this.setSize(521, 333);
+			this.setSize(521, 362);
 		} catch (Exception e) {
 		    //add your error handling code here
 			e.printStackTrace();
