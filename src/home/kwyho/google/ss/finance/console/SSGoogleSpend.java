@@ -1,6 +1,5 @@
 package home.kwyho.google.ss.finance.console;
 
-import home.kwyho.google.ss.finance.FastNormalizedWorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.NormalizedWorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.SpendingAnalyzer;
 import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
@@ -38,11 +37,13 @@ public class SSGoogleSpend {
 		System.out.print("Password = ? ");
 		String password = new String(console.readPassword());
 		
+		System.out.println("Initializing connections...");
 		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password);
 		SpreadsheetEntry spreadsheet = ssSpend.retrieveSSSpendingSpreadsheet();
 		System.out.println(spreadsheet.getTitle().getPlainText());
 		
-		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new FastNormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
+		System.out.println("Handling category language...");
+		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
 		worksheetWrangler.importAllCategoriesFromData(username, password);
 		
 		for (String month: args) {

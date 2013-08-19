@@ -17,6 +17,7 @@ import com.google.gdata.data.spreadsheet.CellFeed;
 import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 
+@Deprecated
 public class FastNormalizedWorksheetSpendingDataWrangler extends
 		NormalizedWorksheetSpendingDataWrangler {
 
