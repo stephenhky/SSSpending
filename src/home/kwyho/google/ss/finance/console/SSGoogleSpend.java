@@ -46,14 +46,18 @@ public class SSGoogleSpend {
 		worksheetWrangler.importAllCategoriesFromData(username, password);
 		
 		for (String month: args) {
+			System.out.println("+++ Month: "+month);
+			double sum = 0.0;
 			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
 			if (worksheet != null) {
 				List<SSFinanceDataEntry> entries = worksheetWrangler.getWorksheetSpendingData(worksheet);
 				List<ClassObj> classTypes = SpendingAnalyzer.getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_CATEGORY);
 				for (ClassObj classType: classTypes) {
 					System.out.println(classType.getClassType()+" : "+DoubleRounder.round(classType.getTotalAmount(), 2));
+					sum += classType.getTotalAmount();
 				}
 			}
+			System.out.println("Total = "+DoubleRounder.round(sum, 2));
 		}
 	}
 

@@ -17,12 +17,22 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 public class CategoryNormalizer {
 	private HashMap<String, String> crosswalkHash;
 	private HashMap<String, List<String>> stemmedCategoriesHash;
-	private MaxentTagger tagger;
+	static private MaxentTagger tagger;
+	static {
+		try {
+			tagger = new MaxentTagger("english-left3words-distsim.tagger");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
 	
-	public CategoryNormalizer(String filename) throws IOException, ClassNotFoundException {
+	public CategoryNormalizer(String filename) {
 		File crosswalkFile = new File(filename);
 		importCrosswalk(crosswalkFile);
-		tagger = new MaxentTagger("english-left3words-distsim.tagger");
 	}
 	
 	public CategoryNormalizer() throws IOException, ClassNotFoundException {
