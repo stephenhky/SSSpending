@@ -139,6 +139,9 @@ public class CategoryNormalizer {
 	
 	public String normalize(String category) {
 		String stemmedCategory = CategoryNormalizer.stemWords(category.toLowerCase());
+		if (crosswalkHash.containsKey(stemmedCategory)) {
+			stemmedCategory = crosswalkHash.get(stemmedCategory);
+		}
 		if (stemmedCategoriesHash.containsKey(stemmedCategory)) {
 			return chooseBestWord(stemmedCategoriesHash.get(stemmedCategory));
 		} else {

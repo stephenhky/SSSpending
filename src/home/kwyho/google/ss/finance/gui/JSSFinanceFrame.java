@@ -2,15 +2,15 @@ package home.kwyho.google.ss.finance.gui;
 import home.kwyho.google.ss.finance.SpendingAnalyzer;
 import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JButton;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -55,6 +55,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 	private List<JCheckBox> monthCheckBoxes;
 	private CategorizedSpendingTableModel jCategoryTableModel;
 	private List<List<SSFinanceDataEntry>> monthEntries;
+	//private ChartPanel jPieChartPanel;
 
 	/**
 	* Auto-generated main method to display this JFrame
@@ -71,11 +72,12 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 	
 	public JSSFinanceFrame() {
 		super();
-		initGUI();
 		monthEntries = new ArrayList<List<SSFinanceDataEntry>>();
 		for (int monthIdx=0; monthIdx<SpreadsheetSSSpending.MONTH_NAMES.length; monthIdx++) {
 			monthEntries.add(null);
 		}
+		//jPieChartPanel = new ChartPanel(null);
+		initGUI();
 	}
 	
 	public void setEntries(int monthIdx, List<SSFinanceDataEntry> entries) {
@@ -198,6 +200,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 						jScrollPane1.setViewportView(jCategoryTable);
 						jCategoryTable.setModel(jCategoryTableModel);
 					}
+					//jTabbedPane.addTab("Pie Chart", null, jPieChartPanel, null);
 				}
 			}
 			{
