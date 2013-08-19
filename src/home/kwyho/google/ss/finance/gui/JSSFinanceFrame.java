@@ -1,5 +1,7 @@
 package home.kwyho.google.ss.finance.gui;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JCheckBox;
@@ -7,8 +9,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo
@@ -164,6 +164,13 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 				}
 			}
 
+			// check the current month
+			Date date = new Date();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			int monthIdx = cal.get(Calendar.MONTH);
+			monthCheckBoxes.get(monthIdx-1).setSelected(true);
+			
 			pack();
 			this.setSize(521, 333);
 		} catch (Exception e) {
