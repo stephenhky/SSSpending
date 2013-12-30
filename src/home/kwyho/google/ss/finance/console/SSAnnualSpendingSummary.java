@@ -46,18 +46,18 @@ public class SSAnnualSpendingSummary {
 		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
 		worksheetWrangler.importAllCategoriesFromData(username, password);
 
-		Map<String, List<ClassObj>> spendingTables = new HashMap<String, List<ClassObj>>();
+		Map<String, List<ClassObj>> monthlySpendingTables = new HashMap<String, List<ClassObj>>();
 		for (String month: CalendarMonths.MONTH_NAMES) {
 			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
 			if (worksheet != null) {
 				List<SSFinanceDataEntry> entries = worksheetWrangler.getWorksheetSpendingData(worksheet);
 				List<ClassObj> classTypes = SpendingAnalyzer.getClassifiedSpendings(entries, WorksheetSpendingDataWrangler.COLUMN_CATEGORY);
-				spendingTables.put(month, classTypes);
+				monthlySpendingTables.put(month, classTypes);
 			}
 		}
 		
 		Map<String, ClassObj> annualSpendingMap = new HashMap<String, ClassObj>();
-		for (List<ClassObj> classTypes: spendingTables.values()) {
+		for (List<ClassObj> classTypes: monthlySpendingTables.values()) {
 			for (ClassObj classType: classTypes) {
 				String category = classType.getClassType();
 				if (annualSpendingMap.containsKey(category)) {
@@ -71,9 +71,12 @@ public class SSAnnualSpendingSummary {
 		List<ClassObj> annualSpendings = new ArrayList<ClassObj>(annualSpendingMap.values());
 		Collections.sort(annualSpendings, Collections.reverseOrder(new ClassObjComparator()));
 		
+		
 		for (ClassObj classType: annualSpendings) {
 			System.out.println(classType);
 		}
+		
+		worksheetWrangler.writeAnnualSummary(ssSpend.getSummaryWorksheet(), monthlySpendingTables, annualSpendings);
 	}
 
 }

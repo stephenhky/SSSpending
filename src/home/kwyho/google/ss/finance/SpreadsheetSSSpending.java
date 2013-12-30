@@ -23,6 +23,7 @@ public class SpreadsheetSSSpending {
 	private static String SS_SPEND_ID = "t-cP5RjsrrdhW6qxupaT_xg";
 	private SpreadsheetEntry ssSpendingSpreadsheet;
 	private HashMap<String, WorksheetEntry> hashWorksheets;
+	private WorksheetEntry summaryWorksheet;
 	//public static String[] MONTH_NAMES = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	
 	public SpreadsheetSSSpending(FeedURLFactory factory, SpreadsheetFeed feed,
@@ -75,6 +76,8 @@ public class SpreadsheetSSSpending {
 				String sheetName = worksheet.getTitle().getPlainText();
 				if (Arrays.asList(CalendarMonths.MONTH_NAMES).contains(sheetName)) {
 					hashWorksheets.put(sheetName, worksheet);
+				} else if (sheetName.equals("Summary")) {
+					summaryWorksheet = worksheet;
 				}
 			}
 		} catch (IOException e) {
@@ -88,5 +91,9 @@ public class SpreadsheetSSSpending {
 	
 	public WorksheetEntry getWorksheet(String month) {
 		return hashWorksheets.get(month);
+	}
+
+	public WorksheetEntry getSummaryWorksheet() {
+		return summaryWorksheet;
 	}
 }

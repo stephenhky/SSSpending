@@ -1,11 +1,15 @@
 package home.kwyho.google.ss.finance;
 
+import home.kwyho.google.ss.finance.dataobj.ClassObj;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
+import home.kwyho.google.ss.finance.misc.CalendarMonths;
+import home.kwyho.google.ss.finance.misc.DoubleRounder;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gdata.client.spreadsheet.CellQuery;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
@@ -107,6 +111,54 @@ public class WorksheetSpendingDataWrangler {
 		}
 		
 		return entries;
+	}
+	
+	public void writeAnnualSummary(WorksheetEntry summaryWorksheet, Map<String, List<ClassObj>> monthlySpendingTables, List<ClassObj> annualSpendings) throws IOException, ServiceException {
+		URL cellFeedUrl = summaryWorksheet.getCellFeedUrl();
+		
+		for (int idx=0; idx<annualSpendings.size(); idx++) {
+			ClassObj categoryObj = annualSpendings.get(idx);
+			CellQuery query = new CellQuery(cellFeedUrl);
+			query.setMinimumCol(2);
+			query.setMaximumCol(15);
+			query.setMinimumRow(idx+3);
+			query.setMaximumRow(idx+3);
+			CellFeed feed = service.query(query, CellFeed.class);
+			
+			System.out.println("Category: "+categoryObj.getClassType()+"\t"+feed.getEntries().size());
+			
+			for (CellEntry cell: feed.getEntries()) {
+				int colIdx = cell.getCell().getCol();
+				System.out.println(colIdx);
+				switch(colIdx) {
+				case 2:
+					cell.changeInputValueLocal(categoryObj.getClassType());
+					cell.update();
+					System.out.println("Writing...");
+					break;
+				case 15:
+					cell.changeInputValueLocal(DoubleRounder.round(categoryObj.getTotalAmount(), 2).toString());
+					cell.update();
+					System.out.println("Writing...");
+					break;
+				default:
+					int monthIdx = colIdx-3;
+					String monthName = CalendarMonths.MONTH_NAMES[monthIdx];
+					List<ClassObj> classTypes = monthlySpendingTables.get(monthName);
+					Double amount = 0.00;
+					for (ClassObj classType: classTypes) {
+						if (classType.getClassType().equals(categoryObj.getClassType())) {
+							amount = classType.getTotalAmount();
+							break;
+						}
+					}
+					cell.changeInputValueLocal(DoubleRounder.round(amount, 2).toString());
+					cell.update();
+				}
+				
+			}
+		}
+
 	}
 	
 	@Deprecated
