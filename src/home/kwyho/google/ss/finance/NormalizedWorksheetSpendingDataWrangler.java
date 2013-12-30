@@ -2,6 +2,7 @@ package home.kwyho.google.ss.finance;
 
 import home.kwyho.google.ss.finance.catNLP.CategoryNormalizer;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
+import home.kwyho.google.ss.finance.misc.CalendarMonths;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,7 +47,7 @@ public class NormalizedWorksheetSpendingDataWrangler extends
 		try {
 			SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password);
 			Set<String> unstemmedCategoriesSet = new HashSet<String>();
-			for (String month: SpreadsheetSSSpending.MONTH_NAMES) {
+			for (String month: CalendarMonths.MONTH_NAMES) {
 				System.out.println("Importing worksheet: "+month);
 				WorksheetEntry worksheet = ssSpend.getWorksheet(month);
 				if (worksheet != null) {

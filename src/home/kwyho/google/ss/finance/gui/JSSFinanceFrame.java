@@ -1,7 +1,7 @@
 package home.kwyho.google.ss.finance.gui;
 import home.kwyho.google.ss.finance.SpendingAnalyzer;
-import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
+import home.kwyho.google.ss.finance.misc.CalendarMonths;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -78,7 +78,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 	public JSSFinanceFrame() {
 		super();
 		monthEntries = new ArrayList<List<SSFinanceDataEntry>>();
-		for (int monthIdx=0; monthIdx<SpreadsheetSSSpending.MONTH_NAMES.length; monthIdx++) {
+		for (int monthIdx=0; monthIdx<CalendarMonths.MONTH_NAMES.length; monthIdx++) {
 			monthEntries.add(null);
 		}
 		//jPieChartPanel = new ChartPanel(null);
@@ -91,7 +91,7 @@ public class JSSFinanceFrame extends javax.swing.JFrame {
 	
 	public void setAnalyzedMonthData() {
 		List<SSFinanceDataEntry> includedEntries = new ArrayList<SSFinanceDataEntry>();
-		for (int monthIdx=0; monthIdx<SpreadsheetSSSpending.MONTH_NAMES.length; monthIdx++) {
+		for (int monthIdx=0; monthIdx<CalendarMonths.MONTH_NAMES.length; monthIdx++) {
 			if (monthCheckBoxes.get(monthIdx).isSelected()) {
 				List<SSFinanceDataEntry> entries = monthEntries.get(monthIdx);
 				if (entries!=null) {

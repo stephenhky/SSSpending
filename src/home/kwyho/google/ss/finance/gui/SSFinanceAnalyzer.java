@@ -2,6 +2,7 @@ package home.kwyho.google.ss.finance.gui;
 
 import home.kwyho.google.ss.finance.NormalizedWorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
+import home.kwyho.google.ss.finance.misc.CalendarMonths;
 
 import java.io.IOException;
 
@@ -41,8 +42,8 @@ public class SSFinanceAnalyzer {
 		
 		// Setting up GUI
 		JSSFinanceFrame jFrame = new JSSFinanceFrame();
-		for (int monthIdx=0; monthIdx < SpreadsheetSSSpending.MONTH_NAMES.length; monthIdx++) {
-			String month = SpreadsheetSSSpending.MONTH_NAMES[monthIdx];
+		for (int monthIdx=0; monthIdx < CalendarMonths.MONTH_NAMES.length; monthIdx++) {
+			String month = CalendarMonths.MONTH_NAMES[monthIdx];
 			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
 			if (worksheet != null) {
 				jFrame.setEntries(monthIdx, worksheetWrangler.getWorksheetSpendingData(worksheet));

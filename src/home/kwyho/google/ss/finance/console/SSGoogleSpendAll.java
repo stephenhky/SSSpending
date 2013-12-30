@@ -7,6 +7,7 @@ import home.kwyho.google.ss.finance.WorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.dataobj.ClassObj;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
 import home.kwyho.google.ss.finance.gui.JAuthenticationPanel;
+import home.kwyho.google.ss.finance.misc.CalendarMonths;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +42,7 @@ public class SSGoogleSpendAll {
 		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
 		worksheetWrangler.importAllCategoriesFromData(username, password);
 		
-		for (String month: SpreadsheetSSSpending.MONTH_NAMES) {
+		for (String month: CalendarMonths.MONTH_NAMES) {
 			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
 			if (worksheet != null) {
 				System.out.println(month+" : "+worksheet.getTitle().getPlainText());

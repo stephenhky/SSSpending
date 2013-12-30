@@ -1,6 +1,7 @@
 package home.kwyho.google.ss.finance;
 
 import home.kwyho.google.ss.finance.authenticate.GoogleSpreadsheetAuthentication;
+import home.kwyho.google.ss.finance.misc.CalendarMonths;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public class SpreadsheetSSSpending {
 	private static String SS_SPEND_ID = "t-cP5RjsrrdhW6qxupaT_xg";
 	private SpreadsheetEntry ssSpendingSpreadsheet;
 	private HashMap<String, WorksheetEntry> hashWorksheets;
-	public static String[] MONTH_NAMES = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+	//public static String[] MONTH_NAMES = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	
 	public SpreadsheetSSSpending(FeedURLFactory factory, SpreadsheetFeed feed,
 			SpreadsheetService service) {
@@ -72,7 +73,7 @@ public class SpreadsheetSSSpending {
 			worksheets = ssSpendingSpreadsheet.getWorksheets();
 			for (WorksheetEntry worksheet: worksheets) {
 				String sheetName = worksheet.getTitle().getPlainText();
-				if (Arrays.asList(MONTH_NAMES).contains(sheetName)) {
+				if (Arrays.asList(CalendarMonths.MONTH_NAMES).contains(sheetName)) {
 					hashWorksheets.put(sheetName, worksheet);
 				}
 			}
