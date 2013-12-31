@@ -123,23 +123,19 @@ public class WorksheetSpendingDataWrangler {
 			query.setMaximumCol(15);
 			query.setMinimumRow(idx+3);
 			query.setMaximumRow(idx+3);
+			query.setReturnEmpty(true);
 			CellFeed feed = service.query(query, CellFeed.class);
-			
-			System.out.println("Category: "+categoryObj.getClassType()+"\t"+feed.getEntries().size());
 			
 			for (CellEntry cell: feed.getEntries()) {
 				int colIdx = cell.getCell().getCol();
-				System.out.println(colIdx);
 				switch(colIdx) {
 				case 2:
 					cell.changeInputValueLocal(categoryObj.getClassType());
 					cell.update();
-					System.out.println("Writing...");
 					break;
 				case 15:
 					cell.changeInputValueLocal(DoubleRounder.round(categoryObj.getTotalAmount(), 2).toString());
 					cell.update();
-					System.out.println("Writing...");
 					break;
 				default:
 					int monthIdx = colIdx-3;

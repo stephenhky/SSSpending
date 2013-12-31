@@ -46,6 +46,7 @@ public class SSAnnualSpendingSummary {
 		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
 		worksheetWrangler.importAllCategoriesFromData(username, password);
 
+		System.out.println("Analyzing data...");
 		Map<String, List<ClassObj>> monthlySpendingTables = new HashMap<String, List<ClassObj>>();
 		for (String month: CalendarMonths.MONTH_NAMES) {
 			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
@@ -56,6 +57,7 @@ public class SSAnnualSpendingSummary {
 			}
 		}
 		
+		System.out.println("Calculating sum...");
 		Map<String, ClassObj> annualSpendingMap = new HashMap<String, ClassObj>();
 		for (List<ClassObj> classTypes: monthlySpendingTables.values()) {
 			for (ClassObj classType: classTypes) {
@@ -76,6 +78,7 @@ public class SSAnnualSpendingSummary {
 			System.out.println(classType);
 		}
 		
+		System.out.println("Updating summary table...");
 		worksheetWrangler.writeAnnualSummary(ssSpend.getSummaryWorksheet(), monthlySpendingTables, annualSpendings);
 	}
 
