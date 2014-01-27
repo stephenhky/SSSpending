@@ -6,6 +6,8 @@ import home.kwyho.google.ss.finance.SpreadsheetSSSpending;
 import home.kwyho.google.ss.finance.WorksheetSpendingDataWrangler;
 import home.kwyho.google.ss.finance.dataobj.ClassObj;
 import home.kwyho.google.ss.finance.dataobj.SSFinanceDataEntry;
+import home.kwyho.google.ss.finance.exceptions.WrongYearException;
+import home.kwyho.google.ss.finance.hashid.GoogleSpendingSpreadsheetIDHash;
 import home.kwyho.google.ss.finance.misc.DoubleRounder;
 
 import java.io.Console;
@@ -24,8 +26,9 @@ public class SSGoogleSpend {
 	 * @throws ServiceException 
 	 * @throws IOException 
 	 * @throws AuthenticationException 
+	 * @throws WrongYearException 
 	 */
-	public static void main(String[] args) throws AuthenticationException, IOException, ServiceException {
+	public static void main(String[] args) throws AuthenticationException, IOException, ServiceException, WrongYearException {
 		if (args.length == 0) {
 			System.out.println("Argument: <month> [<month> ...])");
 			System.exit(1);
@@ -36,15 +39,20 @@ public class SSGoogleSpend {
 		String username = console.readLine();
 		System.out.print("Password = ? ");
 		String password = new String(console.readPassword());
+		System.out.print("Year = ? ");
+		String year = console.readLine();
+		if (!GoogleSpendingSpreadsheetIDHash.YearToKeyHashMap.containsKey(year)) {
+			throw new WrongYearException(year);
+		}
 		
 		System.out.println("Initializing connections...");
-		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password);
+		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password, year);
 		SpreadsheetEntry spreadsheet = ssSpend.retrieveSSSpendingSpreadsheet();
 		System.out.println(spreadsheet.getTitle().getPlainText());
 		
 		System.out.println("Handling category language...");
 		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
-		worksheetWrangler.importAllCategoriesFromData(username, password);
+		worksheetWrangler.importAllCategoriesFromData(username, password, year);
 		
 		for (String month: args) {
 			System.out.println("+++ Month: "+month);

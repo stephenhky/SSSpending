@@ -1,6 +1,7 @@
 package home.kwyho.google.ss.finance;
 
 import home.kwyho.google.ss.finance.authenticate.GoogleSpreadsheetAuthentication;
+import home.kwyho.google.ss.finance.hashid.GoogleSpendingSpreadsheetIDHash;
 import home.kwyho.google.ss.finance.misc.CalendarMonths;
 
 import java.io.IOException;
@@ -20,33 +21,36 @@ public class SpreadsheetSSSpending {
 	private FeedURLFactory factory;
 	private SpreadsheetFeed spreadsheetFeed;
 	private SpreadsheetService service;
-	private static String SS_SPEND_ID = "t-cP5RjsrrdhW6qxupaT_xg";
+//	private static String SS_SPEND_ID_2013 = "t-cP5RjsrrdhW6qxupaT_xg";
 	private SpreadsheetEntry ssSpendingSpreadsheet;
 	private HashMap<String, WorksheetEntry> hashWorksheets;
 	private WorksheetEntry summaryWorksheet;
 	//public static String[] MONTH_NAMES = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+	private String year;
 	
 	public SpreadsheetSSSpending(FeedURLFactory factory, SpreadsheetFeed feed,
-			SpreadsheetService service) {
+			SpreadsheetService service, String year) {
 		super();
 		this.factory = factory;
 		this.spreadsheetFeed = feed;
 		this.service = service;
+		this.year = year;
 		ssSpendingSpreadsheet = retrieveSSSpendingSpreadsheet();
 		computeHashmap();
 	}
 
-	public SpreadsheetSSSpending(SpreadsheetService service) throws IOException, ServiceException {
+	public SpreadsheetSSSpending(SpreadsheetService service, String year) throws IOException, ServiceException {
 		super();
 		this.service = service;
+		this.year = year;
 		factory = FeedURLFactory.getDefault();
 		spreadsheetFeed = this.service.getFeed(factory.getSpreadsheetsFeedUrl(), SpreadsheetFeed.class);
 		ssSpendingSpreadsheet = retrieveSSSpendingSpreadsheet();
 		computeHashmap();
 	}
 	
-	public SpreadsheetSSSpending(String username, String password) throws AuthenticationException, IOException, ServiceException {
-		this(GoogleSpreadsheetAuthentication.login(username, password));
+	public SpreadsheetSSSpending(String username, String password, String year) throws AuthenticationException, IOException, ServiceException {
+		this(GoogleSpreadsheetAuthentication.login(username, password), year);
 	}
 	
 	public SpreadsheetService getService() {
@@ -56,7 +60,7 @@ public class SpreadsheetSSSpending {
 	public SpreadsheetEntry retrieveSSSpendingSpreadsheet() {
 		List<SpreadsheetEntry> spreadsheets = spreadsheetFeed.getEntries();
 		for (SpreadsheetEntry spreadsheet: spreadsheets) {
-			if (spreadsheet.getId().indexOf(SS_SPEND_ID) != -1) {
+			if (spreadsheet.getId().indexOf(GoogleSpendingSpreadsheetIDHash.YearToKeyHashMap.get(year)) != -1) {
 				return spreadsheet;
 			}
 		}
@@ -95,5 +99,13 @@ public class SpreadsheetSSSpending {
 
 	public WorksheetEntry getSummaryWorksheet() {
 		return summaryWorksheet;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
 	}
 }

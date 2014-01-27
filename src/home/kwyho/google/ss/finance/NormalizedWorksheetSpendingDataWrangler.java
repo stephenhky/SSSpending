@@ -43,9 +43,9 @@ public class NormalizedWorksheetSpendingDataWrangler extends
 		normalizer.importAllCategories(unstemmedCategories);
 	}
 	
-	public void importAllCategoriesFromData(String username, String password) {
+	public void importAllCategoriesFromData(String username, String password, String year) {
 		try {
-			SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password);
+			SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password, year);
 			Set<String> unstemmedCategoriesSet = new HashSet<String>();
 			for (String month: CalendarMonths.MONTH_NAMES) {
 				System.out.println("Importing worksheet: "+month);

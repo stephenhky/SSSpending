@@ -30,15 +30,16 @@ public class SSFinanceAnalyzer {
 		}
 		String username = panel.getGmailAddr();
 		String password = panel.getPassword();
+		String year = "2014";
 		
 		// Initializing connections....
-		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password);
+		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password, year);
 		SpreadsheetEntry spreadsheet = ssSpend.retrieveSSSpendingSpreadsheet();
 		System.out.println(spreadsheet.getTitle().getPlainText());
 		
 		// Handling category language...
 		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
-		worksheetWrangler.importAllCategoriesFromData(username, password);
+		worksheetWrangler.importAllCategoriesFromData(username, password, year);
 		
 		// Setting up GUI
 		JSSFinanceFrame jFrame = new JSSFinanceFrame();

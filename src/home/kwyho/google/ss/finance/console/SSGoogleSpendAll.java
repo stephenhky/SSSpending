@@ -35,12 +35,13 @@ public class SSGoogleSpendAll {
 		}
 		String username = panel.getGmailAddr();
 		String password = panel.getPassword();
-		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password);
+		String year = "2014";
+		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password, year);
 		SpreadsheetEntry spreadsheet = ssSpend.retrieveSSSpendingSpreadsheet();
 		System.out.println(spreadsheet.getTitle().getPlainText());
 		
 		NormalizedWorksheetSpendingDataWrangler worksheetWrangler = new NormalizedWorksheetSpendingDataWrangler(ssSpend.getService());
-		worksheetWrangler.importAllCategoriesFromData(username, password);
+		worksheetWrangler.importAllCategoriesFromData(username, password, year);
 		
 		for (String month: CalendarMonths.MONTH_NAMES) {
 			WorksheetEntry worksheet = ssSpend.getWorksheet(month);
