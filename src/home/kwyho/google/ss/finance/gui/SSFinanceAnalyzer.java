@@ -30,7 +30,7 @@ public class SSFinanceAnalyzer {
 		}
 		String username = panel.getGmailAddr();
 		String password = panel.getPassword();
-		String year = "2014";
+		String year = "2015";
 		
 		// Initializing connections....
 		SpreadsheetSSSpending ssSpend = new SpreadsheetSSSpending(username, password, year);
